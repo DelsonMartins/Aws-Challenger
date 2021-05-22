@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+      <h1>Listagem 2</h1>
+    </div>
+
+     <div class="ui-g-12">
+      <button pButton type="submit" class="espaco-icones" label="Pesquisar" (click)='pesquisar2(true)'></button>
+      <!--button pButton type="submit" class="espaco-icones" label="Upload_2" (change)="selectFile($event)" (click)='upload()'></button>  -->
+    </div>
+  
+    <div class="ui-g-12">
+      <p-fileUpload name="anexo" mode="basic" auto="true" maxFileSize="100000000"
+      chooseLabel="Anexar" accept=".txt,image/*,application/*"
+      [url]="urlUploadAnexo"></p-fileUpload>
+    </div>
+
+  </div>
+
+  <div class="ui-g">
+      <div class="ui-g-12">
+
+  <p-table [value]="listFiles" [paginator]="true" [rows]="4" [responsive]="true"   #tabela>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nome</th>
+        <th>Modificado em</th>
+        <th class="col-data-header">Tamanho</th>
+        <th class="col-valor-header">Storage Class</th>
+        <th class="col-acoes-header"></th>
+      </tr>
+    </ng-template>
+  
+    <ng-template pTemplate="body" let-arquivo>
+      <tr>
+       <!-- <div class="text-break-ellipsis"> -->
+            <td>{{ arquivo.name }}</td>
+      <!--</div> -->
+        <td>{{ arquivo.lastModif }}</td>
+        <td>{{ arquivo.size }}</td>
+        <td>{{ arquivo.storageClass }}</td>
+  
+        <td class="col-acoes">
+          <button pButton class="espaco-icones" icon="pi pi-cloud-download" pTooltip="Download"
+            tooltipPosition="top"></button>
+  
+          <button pButton class="espaco-icones" icon="pi pi-trash"
+            pTooltip="Excluir" tooltipPosition="top"></button>
+        </td>
+      </tr>
+    </ng-template>
+  
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6">
+          Nenhum arquivo encontrado
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</div>
+</div>
+
+</div>
