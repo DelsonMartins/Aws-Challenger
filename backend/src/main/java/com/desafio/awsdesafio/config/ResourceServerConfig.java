@@ -22,7 +22,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/h2-console").permitAll()
-				.antMatchers("/aws/file/all").permitAll() 				
+				//.antMatchers("/aws/file/all").permitAll() 				
 				.anyRequest().authenticated()
 				.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

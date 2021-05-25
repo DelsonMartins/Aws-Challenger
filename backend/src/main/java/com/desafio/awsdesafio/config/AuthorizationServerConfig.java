@@ -37,8 +37,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	            .secret("$2a$10$SqBUGQPr62JBaJkVLh6K5uRky8MABkpNdO6.rmSb6E9.IMUBJ07.u") //senha encriptada em Brypt (@ngul@r0)	            
 				.scopes("read", "write") //escopo de acesso. Se só vai ler ou ler e escrever.
 				.authorizedGrantTypes("password", "refresh_token") //tipo de autorização usada. Recebe usuário e senha. O angular tem acesso ao usuário e senha.
-				.accessTokenValiditySeconds(10) //fica 30 minutos funcionando
-				.refreshTokenValiditySeconds(20)
+				.accessTokenValiditySeconds(1800) //fica 30 minutos funcionando
+				.refreshTokenValiditySeconds(3600*24)
 				.and()
 				.withClient("mobile") //cliente que está acessando
 				.secret("$2a$10$snSw8BTenEzkbRU8bdS0lusePdZanNSe/B3KWuQ7KftYCDBtLTtaK") //senha encriptada em Brypt (m0b1l30)
@@ -47,9 +47,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.accessTokenValiditySeconds(1800) //fica 30 minutos funcionando
 				.refreshTokenValiditySeconds(3600*24);
 	    
-	    logger.info("Passei ");
 		if (logger.isDebugEnabled()) {
-			logger.debug("Passei 2");
+			logger.debug("Passei 1");
 		}
 	}
 

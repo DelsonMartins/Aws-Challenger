@@ -2,17 +2,17 @@
   <div class="ui-g">
 
     <div class="ui-g-12">
-      <h1>Listagem 2</h1>
+      <h1>Listagem</h1>
     </div>
 
      <div class="ui-g-12">
-      <button pButton type="submit" class="espaco-icones" label="Pesquisar" (click)='pesquisar2(true)'></button>
+      <button pButton type="submit" class="espaco-icones" label="Pesquisar" (click)='pesquisar()'></button>
       <!--button pButton type="submit" class="espaco-icones" label="Upload_2" (change)="selectFile($event)" (click)='upload()'></button>  -->
     </div>
   
     <div class="ui-g-12">
       <p-fileUpload name="anexo" mode="basic" auto="true" maxFileSize="100000000"
-      chooseLabel="Anexar" accept=".txt,image/*,application/*"
+      chooseLabel="Anexar" accept=".txt,.xlsx,image/*,application/*"
       [url]="urlUploadAnexo"></p-fileUpload>
     </div>
 
@@ -28,26 +28,27 @@
         <th>Modificado em</th>
         <th class="col-data-header">Tamanho</th>
         <th class="col-valor-header">Storage Class</th>
-        <th class="col-acoes-header"></th>
+        <th class="col-acoes-header">Ações</th>
       </tr>
     </ng-template>
   
     <ng-template pTemplate="body" let-arquivo>
       <tr>
-       <!-- <div class="text-break-ellipsis"> -->
-            <td>{{ arquivo.name }}</td>
-      <!--</div> -->
+        <td>{{ clearName (arquivo) }}</td>
         <td>{{ arquivo.lastModif }}</td>
         <td>{{ arquivo.size }}</td>
         <td>{{ arquivo.storageClass }}</td>
   
         <td class="col-acoes">
-          <button pButton class="espaco-icones" icon="pi pi-cloud-download" pTooltip="Download"
-            tooltipPosition="top"></button>
+          <button pButton class="espaco-icones" icon="pi pi-cloud-download"
+            pTooltip="Download" tooltipPosition="top" 
+            (click)="viewFile(arquivo)"></button>
   
           <button pButton class="espaco-icones" icon="pi pi-trash"
-            pTooltip="Excluir" tooltipPosition="top"></button>
-        </td>
+            pTooltip="Excluir" tooltipPosition="top"
+            (click)="confirmarExclusao(arquivo)"
+            [disabled]="!auth.temPermissao('ROLE_REMOVER_ARQUIVO')"></button>
+         </td>
       </tr>
     </ng-template>
   

@@ -4,16 +4,21 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +29,8 @@ import com.desafio.awsdesafio.services.S3Service;
 @RestController
 @RequestMapping(value = "/aws/file")
 public class S3Controller {
+	
+	private Logger logger = LoggerFactory.getLogger(S3Controller.class);
 	
 	@Autowired
 	private S3Service service;
@@ -36,9 +43,23 @@ public class S3Controller {
 		InfoArqDTO infoArqDTO = new InfoArqDTO();
 		infoArqDTO.setName(nome);
 		infoArqDTO.setSize(anexo.getSize());
+		infoArqDTO.setUrl(service.configurarUrl(nome));
+		
+		
+		  logger.info("Passei no controller do anexo");
+		
+		
 		return infoArqDTO;
 		// = service.configurarUrl(nome);
 		//return new InfoArqDTO(nome, service.configurarUrl(nome));
+	}
+	
+	//@PreAuthorize("hasAuthority('ROLE_REMOVER_ARQUIVO') and #oauth2.hasScope('write')")
+	@DeleteMapping("/{keyname}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+		public void remover(@PathVariable String keyname) {
+		service.remover(keyname);
+		
 	}
 	
 	/*
@@ -53,12 +74,7 @@ public class S3Controller {
 		}
 	}
 	
-	@DeleteMapping("/{codigo}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
-	public void remover(@PathVariable Long codigo) {
-		lancamentoRepository.delete(codigo);
-	}
+
 	
 	
 	*/

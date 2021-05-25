@@ -41,7 +41,7 @@ public class AwsDesafioApiProperty {
 		
 		private String secretAccessKey;
 		
-		private String bucket = "challenger-aws-s3-files";
+		private String bucket = "desafio-aws-s3-files";
 		
 		public String getBucket() {
 			return bucket;

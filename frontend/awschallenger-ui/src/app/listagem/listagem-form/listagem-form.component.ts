@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { LazyLoadEvent, ConfirmationService } from 'primeng/components/common/api';
 import { ListagemService } from './../listagem.service';
 import { Title } from '@angular/platform-browser';
 import { Table } from 'primeng/components/table/table';
@@ -37,45 +38,58 @@ export class ListagemFormComponent implements OnInit {
     private listagemService: ListagemService,
     private errorHandler: ErrorHandlerService,
     public auth: AuthService,
-    private title: Title
+    private title: Title,
+    private confirmation: ConfirmationService
   ) { }
 
   ngOnInit() {
     this.title.setTitle('Pesquisa de arquivos');
-    this.pesquisar2(true);
+    this.pesquisar();
   }
 
   selectFile(event) {
     this.selectedFiles = event.target.files;
   }
 
-  antesUploadAnexo(event) {
+  /*antesUploadAnexo(event) {
     event.xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-  }
+  } */
 
   get urlUploadAnexo() {
     return this.listagemService.urlUploadAnexo();
   }
 
-  pesquisar(enable: boolean) {
-    this.listagemService.pesquisar3(this.showFile)
-      .then(resultado => {
-        
-        this.listFiles = resultado;
-        console.log("Ok 2!!!!");
-        console.log(this.listFiles);
-        
-      })
-      .catch(erro => this.errorHandler.handle(erro));
-  }
-
-
   
-  pesquisar2(enable: boolean) {
-    this.listagemService.pesquisar4(this.showFile).subscribe((listFiles: InfoArquivo[]) => {
+  
+  pesquisar() {
+    this.listagemService.pesquisar().subscribe((listFiles: InfoArquivo[]) => {
       this.listFiles = listFiles;
     });
   }
+
+  excluir(arquivo: any) {
+    this.listagemService.excluir(arquivo).subscribe();
+    
+    console.log('Exclusao Arquivo');
+  
+  }
+
+  clearName (arquivo: any) {
+    const nome = arquivo.name;
+
+    if (nome) {
+      return nome.substring(nome.indexOf('_') + 1, nome.length);
+    } else {
+      return '';
+    } 
+  }
+
+  viewFile(arquivo: any){
+    console.log('Visualizando arquivo ' + arquivo.url);
+    window.open(arquivo.url);
+  }
+
+
 
   upload() {
     this.progress.percentage = 0;
@@ -88,6 +102,30 @@ export class ListagemFormComponent implements OnInit {
     });
 
     this.selectedFiles = undefined;
+  }
+
+  confirmarExclusao(arquivo: any) {
+    this.confirmation.confirm({
+      message: 'Tem certeza que deseja excluir o arquivo ?',
+      accept: () => {
+        this.excluir(arquivo);
+      }
+    });
+  }
+
+  excluir2(arquivo: any) {
+    this.listagemService.excluir2(arquivo)
+      .then(() => {
+        if (this.grid.first === 0) {
+          this.pesquisar();
+        } else {
+          this.grid.first = 0;
+        }
+
+       // this.toasty.success('Arquivo excluído com sucesso!');
+        console.log('Arquivo excluído com sucesso!!');
+      })
+      .catch(erro => this.errorHandler.handle(erro));
   }
 
 }

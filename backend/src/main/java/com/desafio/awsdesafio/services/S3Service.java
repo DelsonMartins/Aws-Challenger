@@ -33,6 +33,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.SetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.Tag;
+import com.amazonaws.regions.Regions;
 import com.desafio.awsdesafio.config.property.AwsDesafioApiProperty;
 import com.desafio.awsdesafio.dto.InfoArqDTO;
 
@@ -85,8 +86,11 @@ public class S3Service {
 	}
 	
 	public String configurarUrl(String objeto) {
-		return "\\\\" + property.getS3().getBucket() +
-				".s3.amazonaws.com/" + objeto;
+		//return "\\\\" + property.getS3().getBucket() + 
+			//	".s3.us-east-2.amazonaws.com/" + objeto;
+		
+		return "http://" + property.getS3().getBucket() + 
+				".s3.us-east-2.amazonaws.com/" + objeto;
 	}
 	
 	public void salvar(String objeto) {
@@ -103,6 +107,10 @@ public class S3Service {
 				property.getS3().getBucket(), objeto);
 		
 		amazonS3.deleteObject(deleteObjectRequest);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Arquivo sendo removido do S3.");
+		}
 	}
 	
 	public void substituir(String objetoAntigo, String objetoNovo) {
@@ -141,7 +149,7 @@ public class S3Service {
 		            	infoArqDTO.setSize(item.getSize());
 		            	infoArqDTO.setLastModif(item.getLastModified().toString());
 		            	infoArqDTO.setStorageClass(item.getStorageClass());
-		            	infoArqDTO.setUrl("123");
+		            	infoArqDTO.setUrl(configurarUrl(item.getKey()));
 		            	keys.add(infoArqDTO);
 		            }
 		        }
