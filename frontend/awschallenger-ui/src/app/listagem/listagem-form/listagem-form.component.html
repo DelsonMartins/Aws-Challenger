@@ -2,17 +2,16 @@
   <div class="ui-g">
 
     <div class="ui-g-12">
-      <h1>Listagem</h1>
+      <h1>Desafio AMcom - AWS</h1>
     </div>
 
      <div class="ui-g-12">
       <button pButton type="submit" class="espaco-icones" label="Pesquisar" (click)='pesquisar()'></button>
-      <!--button pButton type="submit" class="espaco-icones" label="Upload_2" (change)="selectFile($event)" (click)='upload()'></button>  -->
     </div>
   
     <div class="ui-g-12">
       <p-fileUpload name="anexo" mode="basic" auto="true" maxFileSize="100000000"
-      chooseLabel="Anexar" accept=".txt,.xlsx,image/*,application/*"
+      chooseLabel="Upload" accept=".txt,.xlsx,image/*,application/*"
       [url]="urlUploadAnexo"></p-fileUpload>
     </div>
 

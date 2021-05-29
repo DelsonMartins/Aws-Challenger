@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { LazyLoadEvent, ConfirmationService } from 'primeng/components/common/api';
+import { ConfirmationService } from 'primeng/components/common/api';
 import { ListagemService } from './../listagem.service';
 import { Title } from '@angular/platform-browser';
 import { Table } from 'primeng/components/table/table';
@@ -27,10 +27,6 @@ export class ListagemFormComponent implements OnInit {
 
   showFile = false;
 
-
-
-  //listFiles: InfoArquivo[] = [];
-
   listFiles = [];
 
 
@@ -43,7 +39,7 @@ export class ListagemFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.title.setTitle('Pesquisa de arquivos');
+    this.title.setTitle('AMcom - AWS');
     this.pesquisar();
   }
 
@@ -51,16 +47,12 @@ export class ListagemFormComponent implements OnInit {
     this.selectedFiles = event.target.files;
   }
 
-  /*antesUploadAnexo(event) {
-    event.xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-  } */
-
+ 
   get urlUploadAnexo() {
     return this.listagemService.urlUploadAnexo();
   }
 
-  
-  
+    
   pesquisar() {
     this.listagemService.pesquisar().subscribe((listFiles: InfoArquivo[]) => {
       this.listFiles = listFiles;
@@ -68,9 +60,13 @@ export class ListagemFormComponent implements OnInit {
   }
 
   excluir(arquivo: any) {
+
+    arquivo.name = this.clearName2(arquivo.name);
+
+    console.log('Exclusao Arquivo ' + arquivo.name);
+
     this.listagemService.excluir(arquivo).subscribe();
     
-    console.log('Exclusao Arquivo');
   
   }
 
@@ -79,6 +75,27 @@ export class ListagemFormComponent implements OnInit {
 
     if (nome) {
       return nome.substring(nome.indexOf('_') + 1, nome.length);
+    } else {
+      return '';
+    } 
+  }
+
+  clearBarra (arquivo: any) {
+    const nome = arquivo.name;
+
+    if (nome) {
+      return nome.substring(nome.indexOf('/') + 1, nome.length);
+    } else {
+      return '';
+    } 
+  }
+
+  clearName2 (nomeArquivo: string) {
+   
+    const nome = nomeArquivo;
+
+    if (nome) {
+      return nome.substring(nome.indexOf('/') + 1, nome.length);
     } else {
       return '';
     } 
@@ -122,7 +139,6 @@ export class ListagemFormComponent implements OnInit {
           this.grid.first = 0;
         }
 
-       // this.toasty.success('Arquivo excluído com sucesso!');
         console.log('Arquivo excluído com sucesso!!');
       })
       .catch(erro => this.errorHandler.handle(erro));

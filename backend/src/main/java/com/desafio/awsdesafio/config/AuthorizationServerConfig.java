@@ -36,6 +36,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	            //.secret("@ngul@r0")
 	            .secret("$2a$10$SqBUGQPr62JBaJkVLh6K5uRky8MABkpNdO6.rmSb6E9.IMUBJ07.u") //senha encriptada em Brypt (@ngul@r0)	            
 				.scopes("read", "write") //escopo de acesso. Se só vai ler ou ler e escrever.
+				.additionalInformation("teste", "BLA")
 				.authorizedGrantTypes("password", "refresh_token") //tipo de autorização usada. Recebe usuário e senha. O angular tem acesso ao usuário e senha.
 				.accessTokenValiditySeconds(1800) //fica 30 minutos funcionando
 				.refreshTokenValiditySeconds(3600*24)

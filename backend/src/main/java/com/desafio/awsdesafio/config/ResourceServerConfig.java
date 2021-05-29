@@ -21,8 +21,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/h2-console").permitAll()
-				//.antMatchers("/aws/file/all").permitAll() 				
+				.antMatchers("/h2-console").permitAll()	
 				.anyRequest().authenticated()
 				.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

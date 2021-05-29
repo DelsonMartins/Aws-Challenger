@@ -6,8 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AwsDesafioApiProperty {
 
 	private String originPermitida = "http://localhost:4200";
-	//private String originPermitida = "http://localhost:8000";
-	//private String originPermitida = "http://localhost:4200"; // TODO: Configurar para diferentes ambientes
 
 	private final Seguranca seguranca = new Seguranca();
 	

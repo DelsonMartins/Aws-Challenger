@@ -11,7 +11,6 @@ import { InputTextModule } from 'primeng/components/inputtext/inputtext';
 
 import { AuthHttp } from 'angular2-jwt';
 import { AuthGuard } from './auth.guard';
-import { AuthService } from './auth.service';
 import { LogoutService } from './logout.service';
 
 import { SegurancaRoutingModule } from './seguranca-routing.module';
@@ -22,18 +21,6 @@ import { LoginFormComponent } from './login-form/login-form.component';
 import { environment } from '../../environments/environment';
 import { MoneyHttpInterceptor } from './money-http-interceptor';
 
-
-
-/*
-export function authHttpServiceFactory(auth: AuthService, http: Http, options: RequestOptions) {
-  const config = new AuthConfig({
-    globalHeaders: [
-      { 'Content-Type': 'application/json' }
-    ]
-  });
-
-  return new MoneyHttp(auth, config, http, options);
-}*/
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -71,8 +58,6 @@ export function tokenGetter(): string {
     LogoutService,
     {
       provide: AuthHttp
-     // useFactory: authHttpServiceFactory
-      //deps: [AuthService, Http, RequestOptions]
    }  
     ]
 })

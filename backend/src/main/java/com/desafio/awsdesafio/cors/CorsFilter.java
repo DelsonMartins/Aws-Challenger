@@ -26,8 +26,6 @@ public class CorsFilter implements Filter {
 	@Autowired
 	private AwsDesafioApiProperty property;
 
-	//private String originPermitida = "http://localhost:4200"; // TODO: Configurar para diferentes ambientes
-	
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {

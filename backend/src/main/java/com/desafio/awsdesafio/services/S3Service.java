@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.AmazonClientException;
@@ -33,7 +32,6 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.SetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.Tag;
-import com.amazonaws.regions.Regions;
 import com.desafio.awsdesafio.config.property.AwsDesafioApiProperty;
 import com.desafio.awsdesafio.dto.InfoArqDTO;
 
@@ -42,8 +40,8 @@ public class S3Service {
 	
 	private Logger logger = LoggerFactory.getLogger(S3Service.class);
 	
-	@Autowired
-	private AmazonS3 s3client;
+	//@Autowired
+	//private AmazonS3 s3client;
 	
 	@Autowired
 	private AmazonS3 amazonS3;
@@ -51,7 +49,7 @@ public class S3Service {
 	@Autowired
 	private AwsDesafioApiProperty property;
 	
-	public String salvarTemporariamente(MultipartFile arquivo) {
+	public String salvarTemporariamente(MultipartFile arquivo, String name) {
 		AccessControlList acl = new AccessControlList();
 		acl.grantPermission(GroupGrantee.AllUsers, Permission.Read);
 		
@@ -59,7 +57,11 @@ public class S3Service {
 		objectMetadata.setContentType(arquivo.getContentType());
 		objectMetadata.setContentLength(arquivo.getSize());
 		
-		String nomeUnico = gerarNomeUnico(arquivo.getOriginalFilename());
+		String diretorio = "USER_" + name.substring(0, name.indexOf("@")).toUpperCase() + "/";
+		
+		logger.info("Diretorio: [" + diretorio + "]");
+		
+		String nomeUnico = gerarNomeUnico(arquivo.getOriginalFilename(), diretorio);
 		
 		try {
 			PutObjectRequest putObjectRequest = new PutObjectRequest(
@@ -102,9 +104,18 @@ public class S3Service {
 		amazonS3.setObjectTagging(setObjectTaggingRequest);
 	}
 
-	public void remover(String objeto) {
+	public void remover(String objeto, String name) {
+		
+		String diretorio = "USER_" + name.substring(0, name.indexOf("@")).toUpperCase() + "/";
+		
+		logger.info("Diretorio: [" + diretorio + "]");
+		
+		String arquivo  = diretorio + objeto;
+		
+		logger.info("Arquivo: [" + arquivo + "]");
+		
 		DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(
-				property.getS3().getBucket(), objeto);
+				property.getS3().getBucket(), arquivo);
 		
 		amazonS3.deleteObject(deleteObjectRequest);
 		
@@ -113,28 +124,32 @@ public class S3Service {
 		}
 	}
 	
-	public void substituir(String objetoAntigo, String objetoNovo) {
+	/*public void substituir(String objetoAntigo, String objetoNovo) {
 		if (StringUtils.hasText(objetoAntigo)) {
 			this.remover(objetoAntigo);
 		}
 		
 		salvar(objetoNovo);
+	} */
+	
+	private String gerarNomeUnico(String originalFilename, String diretorio) {
+		return diretorio + UUID.randomUUID().toString() + "_" + originalFilename;
 	}
 	
-	private String gerarNomeUnico(String originalFilename) {
-		return UUID.randomUUID().toString() + "_" + originalFilename;
-	}
-	
-	public List<InfoArqDTO> listFiles2() {
+	public List<InfoArqDTO> listFiles2(String name) {
+		
+		String diretorio = "USER_" + name.substring(0, name.indexOf("@")).toUpperCase() + "/";
+		
+		logger.info("Diretorio: [" + diretorio + "]");
 		
 		  ListObjectsRequest listObjectsRequest = 
 	              new ListObjectsRequest()
-	                    .withBucketName(property.getS3().getBucket());
-	                    //.withPrefix("test" + "/");
+	                    .withBucketName(property.getS3().getBucket())
+	                    .withPrefix(diretorio);
 			
 			List<InfoArqDTO> keys = new ArrayList<>();
 			
-			ObjectListing objects = s3client.listObjects(listObjectsRequest);
+			ObjectListing objects = amazonS3.listObjects(listObjectsRequest);
 			
 			while (true) {
 				List<S3ObjectSummary> summaries = objects.getObjectSummaries();
@@ -154,7 +169,7 @@ public class S3Service {
 		            }
 		        }
 				
-				objects = s3client.listNextBatchOfObjects(objects);
+				objects = amazonS3.listNextBatchOfObjects(objects);
 			}
 			
 			return keys;
@@ -169,7 +184,7 @@ public class S3Service {
 			
 			List<String> keys = new ArrayList<>();
 			
-			ObjectListing objects = s3client.listObjects(listObjectsRequest);
+			ObjectListing objects = amazonS3.listObjects(listObjectsRequest);
 			
 			while (true) {
 				List<S3ObjectSummary> summaries = objects.getObjectSummaries();
@@ -182,7 +197,7 @@ public class S3Service {
 		            	keys.add(item.getKey());
 		        }
 				
-				objects = s3client.listNextBatchOfObjects(objects);
+				objects = amazonS3.listNextBatchOfObjects(objects);
 			}
 			
 			return keys;
@@ -191,7 +206,7 @@ public class S3Service {
 
 	public ByteArrayOutputStream downloadFile(String keyName) {
 		try {
-            S3Object s3object = s3client.getObject(new GetObjectRequest(property.getS3().getBucket(), keyName));
+            S3Object s3object = amazonS3.getObject(new GetObjectRequest(property.getS3().getBucket(), keyName));
             
             InputStream is = s3object.getObjectContent();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -226,7 +241,7 @@ public class S3Service {
 		try {
 			ObjectMetadata metadata = new ObjectMetadata();
 			metadata.setContentLength(file.getSize());
-			s3client.putObject(property.getS3().getBucket(), keyName, file.getInputStream(), metadata);
+			amazonS3.putObject(property.getS3().getBucket(), keyName, file.getInputStream(), metadata);
 		} catch(IOException ioe) {
 			logger.error("IOException: " + ioe.getMessage());
 		} catch (AmazonServiceException ase) {

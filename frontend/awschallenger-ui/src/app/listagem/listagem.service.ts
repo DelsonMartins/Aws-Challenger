@@ -1,11 +1,9 @@
-import { URLSearchParams } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { AuthHttp } from 'angular2-jwt';
 import * as moment from 'moment';
 
 
@@ -43,10 +41,6 @@ export class ListagemService {
 
 
   pesquisar(): Observable<InfoArquivo[]> {
-    //const headers = new HttpHeaders()
-      //.append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
-    //  .append('Authorization', 'Basic YW5ndWxhcjpAbmd1bEByMA=='); 
-
     return this.http.get<InfoArquivo[]>(`${this.listagemUrl}/all`)
       .pipe(
         retry(2),
@@ -94,57 +88,5 @@ export class ListagemService {
   }
 
   */
-
-//catchError(this.handleError))
-  //     .catch(erro => this.errorHandler.handle(erro)); `${this.pessoasUrl}/${codigo}/ativo`
-   
-    /*
-    pushFileToStorage(file: File): Observable<HttpEvent<{}>> {
-    const formdata: FormData = new FormData();
-
-    formdata.append('file', file);
-
-    const req = new HttpRequest('POST', 'http://localhost:8080/aws/file/upload', formdata, {
-      reportProgress: true,
-      responseType: 'text'
-    });
-
-    return this.http.request(req);
-  }
-
-  pesquisar3(enable: boolean): Promise<any> {
-    const headers = new HttpHeaders()
-      .append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
-
-    return this.http.get<any>(`${this.listagemUrl}/all`, { headers })
-      .toPromise()
-      .then(response => {
-        const listagem = response.content;
-        console.log ("Passei");
-        console.log (listagem);
-        return listagem;
-        //response['content']
-      });
-      //.then(response => response['content']);
-      //.then(response =>  {
-       // console.log ("Passei");
-       // console.log (response);
-      //});
-  } 
-
-  pesquisar2(enable: boolean) {
-    this.showFile = enable;
-
-    if (enable) {
-      //this.fileUploads = this.uploadService.getFiles();
-      //return this.http.get(`${this.lancamentosUrl}`)
-      return this.http.get('http://localhost:8080/aws/file/all');
-    }
-  }
-  */
-
-  
-  
-  
 
 }

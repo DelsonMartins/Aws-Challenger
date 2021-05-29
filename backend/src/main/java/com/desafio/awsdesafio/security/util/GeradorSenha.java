@@ -9,6 +9,8 @@ public class GeradorSenha {
 		System.out.println(encoder.encode("admin"));
 		System.out.println(encoder.encode("m0b1l30"));
 		System.out.println(encoder.encode("@ngul@r0"));
+		System.out.println(encoder.encode("john"));
+		System.out.println(encoder.encode("olpbla"));
 		
 	}
 	
