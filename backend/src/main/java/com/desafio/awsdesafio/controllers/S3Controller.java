@@ -46,7 +46,7 @@ public class S3Controller {
 	    logger.info("TESTANDO UPLOAD USUARIO LOGADO [" + name + "]");
 	      	
 		
-		String nome = service.salvarTemporariamente(anexo, name);
+		String nome = service.salvarArquivo(anexo, name);
 		InfoArqDTO infoArqDTO = new InfoArqDTO();
 		infoArqDTO.setName(nome);
 		infoArqDTO.setSize(anexo.getSize());
@@ -72,15 +72,15 @@ public class S3Controller {
 	
 	//@PreAuthorize (String test = principal.username)
 	@GetMapping(value = "/all")
-	public ResponseEntity<List<InfoArqDTO>> listAllFiles(){
+	public ResponseEntity<List<InfoArqDTO>> listAllFiles(String historical){
 		
 		
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    String name = auth.getName();
 		
-	    logger.info("TESTANDO PESQUISA USUARIO LOGADO [" + name + "]");
+	    logger.info("TESTANDO PESQUISA USUARIO LOGADO [" + name + "] Pesquisar historico [" + historical + "]");
 	      	
-		List<InfoArqDTO> list = service.listFiles2(name);
+		List<InfoArqDTO> list = service.listFiles2(name, historical);
 		return ResponseEntity.ok().body(list);
 	}
 	

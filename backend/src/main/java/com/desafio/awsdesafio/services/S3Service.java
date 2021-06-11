@@ -40,16 +40,13 @@ public class S3Service {
 	
 	private Logger logger = LoggerFactory.getLogger(S3Service.class);
 	
-	//@Autowired
-	//private AmazonS3 s3client;
-	
 	@Autowired
 	private AmazonS3 amazonS3;
 	
 	@Autowired
 	private AwsDesafioApiProperty property;
 	
-	public String salvarTemporariamente(MultipartFile arquivo, String name) {
+	public String salvarArquivo(MultipartFile arquivo, String name) {
 		AccessControlList acl = new AccessControlList();
 		acl.grantPermission(GroupGrantee.AllUsers, Permission.Read);
 		
@@ -61,12 +58,16 @@ public class S3Service {
 		
 		logger.info("Diretorio: [" + diretorio + "]");
 		
-		String nomeUnico = gerarNomeUnico(arquivo.getOriginalFilename(), diretorio);
+		//String nomeUnico = gerarNomeUnico(arquivo.getOriginalFilename(), diretorio);
+		
+		String newName = diretorio + arquivo.getOriginalFilename();
+		
+		logger.info("Arquivo: [" + newName + "]");
 		
 		try {
 			PutObjectRequest putObjectRequest = new PutObjectRequest(
 					property.getS3().getBucket(),
-					nomeUnico,
+					newName,
 					arquivo.getInputStream(), 
 					objectMetadata)
 					.withAccessControlList(acl);
@@ -81,7 +82,7 @@ public class S3Service {
 						arquivo.getOriginalFilename());
 			}
 			
-			return nomeUnico;
+			return newName;
 		} catch (IOException e) {
 			throw new RuntimeException("Problemas ao tentar enviar o arquivo para o S3.", e);
 		}
@@ -95,7 +96,7 @@ public class S3Service {
 				".s3.us-east-2.amazonaws.com/" + objeto;
 	}
 	
-	public void salvar(String objeto) {
+	public void salvarOld(String objeto) {
 		SetObjectTaggingRequest setObjectTaggingRequest = new SetObjectTaggingRequest(
 				property.getS3().getBucket(), 
 				objeto, 
@@ -136,44 +137,53 @@ public class S3Service {
 		return diretorio + UUID.randomUUID().toString() + "_" + originalFilename;
 	}
 	
-	public List<InfoArqDTO> listFiles2(String name) {
+	public List<InfoArqDTO> listFiles2(String name, String historical) {
 		
 		String diretorio = "USER_" + name.substring(0, name.indexOf("@")).toUpperCase() + "/";
 		
 		logger.info("Diretorio: [" + diretorio + "]");
 		
-		  ListObjectsRequest listObjectsRequest = 
+		ListObjectsRequest listObjectsRequest = 
 	              new ListObjectsRequest()
 	                    .withBucketName(property.getS3().getBucket())
 	                    .withPrefix(diretorio);
 			
-			List<InfoArqDTO> keys = new ArrayList<>();
+		List<InfoArqDTO> keys = new ArrayList<>();
 			
-			ObjectListing objects = amazonS3.listObjects(listObjectsRequest);
+		ObjectListing objects = amazonS3.listObjects(listObjectsRequest);		
 			
-			while (true) {
-				List<S3ObjectSummary> summaries = objects.getObjectSummaries();
-				if (summaries.size() < 1) {
-					break;
-				}
-				
-				for (S3ObjectSummary item : summaries) {
-		            if (!item.getKey().endsWith("/")) {
-		            	InfoArqDTO infoArqDTO = new InfoArqDTO();
-		            	infoArqDTO.setName(item.getKey());
-		            	infoArqDTO.setSize(item.getSize());
-		            	infoArqDTO.setLastModif(item.getLastModified().toString());
-		            	infoArqDTO.setStorageClass(item.getStorageClass());
-		            	infoArqDTO.setUrl(configurarUrl(item.getKey()));
-		            	keys.add(infoArqDTO);
-		            }
-		        }
-				
-				objects = amazonS3.listNextBatchOfObjects(objects);
+		while (true) {
+			List<S3ObjectSummary> summaries = objects.getObjectSummaries();
+			if (summaries.size() < 1) {
+				break;
 			}
-			
-			return keys;
+				
+				
+			for (S3ObjectSummary item : summaries) {
+				if (!item.getKey().endsWith("/")) {	
+								
+					// Buscar objetos com classe de storage nao-padrao
+					if (historical.contains("true")) {
+						if (item.getStorageClass().equalsIgnoreCase("STANDARD")) {
+							continue;
+						} 
+					}
+													
+					InfoArqDTO infoArqDTO = new InfoArqDTO();
+					infoArqDTO.setName(item.getKey());
+					infoArqDTO.setSize(item.getSize());
+					infoArqDTO.setLastModif(item.getLastModified().toString());
+					infoArqDTO.setStorageClass(item.getStorageClass());
+					infoArqDTO.setUrl(configurarUrl(item.getKey()));
+					keys.add(infoArqDTO);
+				}
+			}
+				
+			objects = amazonS3.listNextBatchOfObjects(objects);
 		}
+			
+		return keys;
+	}
 	
 	public List<String> listFiles() {
 		
