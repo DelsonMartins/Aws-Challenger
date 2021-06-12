@@ -17,9 +17,9 @@ import { AuthService } from './../../seguranca/auth.service';
 export class ListagemFormComponent implements OnInit {
 
   totalRegistros = 0;
-
   selectedFiles: FileList;
   currentFileUpload: File;
+  historical: boolean = false;;
   progress: { percentage: number } = { percentage: 0 };
  
 
@@ -54,30 +54,22 @@ export class ListagemFormComponent implements OnInit {
 
     
   pesquisar() {
-    this.listagemService.pesquisar().subscribe((listFiles: InfoArquivo[]) => {
+    this.listagemService.pesquisar({historical: this.historical}).subscribe((listFiles: InfoArquivo[]) => {
       this.listFiles = listFiles;
     });
   }
 
   excluir(arquivo: any) {
 
-    arquivo.name = this.clearName2(arquivo.name);
+    arquivo.name = this.clearName(arquivo.name);
 
     console.log('Exclusao Arquivo ' + arquivo.name);
 
     this.listagemService.excluir(arquivo).subscribe();
+
+    this.pesquisar();
     
   
-  }
-
-  clearName (arquivo: any) {
-    const nome = arquivo.name;
-
-    if (nome) {
-      return nome.substring(nome.indexOf('_') + 1, nome.length);
-    } else {
-      return '';
-    } 
   }
 
   clearBarra (arquivo: any) {
@@ -90,7 +82,7 @@ export class ListagemFormComponent implements OnInit {
     } 
   }
 
-  clearName2 (nomeArquivo: string) {
+  clearName (nomeArquivo: string) {
    
     const nome = nomeArquivo;
 

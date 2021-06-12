@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders,  HttpParams } from '@angular/common/http';
 import * as moment from 'moment';
 
 
@@ -11,6 +11,11 @@ import { environment } from './../../environments/environment';
 import { InfoArquivo } from './../core/model'; 
 
 import { ErrorHandlerService } from './../core/error-handler.service';
+
+export interface  ListagemFiltro {
+  historical: boolean;
+}
+
 
 @Injectable()
 export class ListagemService {
@@ -40,8 +45,16 @@ export class ListagemService {
   }
 
 
-  pesquisar(): Observable<InfoArquivo[]> {
-    return this.http.get<InfoArquivo[]>(`${this.listagemUrl}/all`)
+  pesquisar(filtro: ListagemFiltro): Observable<InfoArquivo[]> {
+
+    let params = new HttpParams();
+
+    params = params.set('historical', filtro.historical.toString());
+    
+    console.log('Pesquisa historico ['+ filtro.historical.toString() + ']') ;
+
+
+    return this.http.get<InfoArquivo[]>(`${this.listagemUrl}/all`, { params })
       .pipe(
         retry(2),
         catchError(this.handleError))

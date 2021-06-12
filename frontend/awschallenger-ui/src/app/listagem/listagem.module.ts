@@ -13,9 +13,12 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { CheckboxModule } from 'primeng/checkbox';
 
 import { SharedModule } from './../shared/shared.module';
 import { ListagemRoutingModule } from './listagem-routing.module';
+
+
 
 
 @NgModule({
@@ -32,6 +35,7 @@ import { ListagemRoutingModule } from './listagem-routing.module';
 
     FileUploadModule,
     ProgressSpinnerModule,
+    CheckboxModule,
 
     SharedModule,
     ListagemRoutingModule,

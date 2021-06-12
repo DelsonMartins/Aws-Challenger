@@ -8,11 +8,16 @@
      <div class="ui-g-12">
       <button pButton type="submit" class="espaco-icones" label="Pesquisar" (click)='pesquisar()'></button>
     </div>
-  
+
+    <div class="ui-g-12">      
+        <p-checkbox [(ngModel)]="historical" binary="true" label="Base histórica"></p-checkbox>
+    </div>
+
+ 
     <div class="ui-g-12">
       <p-fileUpload name="anexo" mode="basic" auto="true" maxFileSize="100000000"
       chooseLabel="Upload" accept=".txt,.xlsx,image/*,application/*"
-      [url]="urlUploadAnexo"></p-fileUpload>
+      [url]="urlUploadAnexo" (onUpload)='pesquisar()'></p-fileUpload>
     </div>
 
   </div>
@@ -33,7 +38,7 @@
   
     <ng-template pTemplate="body" let-arquivo>
       <tr>
-        <td>{{ clearName (arquivo) }}</td>
+        <td>{{ clearBarra (arquivo) }}</td>
         <td>{{ arquivo.lastModif }}</td>
         <td>{{ arquivo.size }}</td>
         <td>{{ arquivo.storageClass }}</td>
