@@ -25,47 +25,52 @@
   <div class="ui-g">
       <div class="ui-g-12">
 
-  <p-table [value]="listFiles" [paginator]="true" [rows]="4" [responsive]="true"   #tabela>
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Nome</th>
-        <th>Modificado em</th>
-        <th class="col-data-header">Tamanho</th>
-        <th class="col-valor-header">Storage Class</th>
-        <th class="col-acoes-header">Ações</th>
-      </tr>
-    </ng-template>
-  
-    <ng-template pTemplate="body" let-arquivo>
-      <tr>
-        <td>{{ clearBarra (arquivo) }}</td>
-        <td>{{ arquivo.lastModif }}</td>
-        <td>{{ arquivo.size }}</td>
-        <td>{{ arquivo.storageClass }}</td>
-  
-        <td class="col-acoes">
-          <button pButton class="espaco-icones" icon="pi pi-cloud-download"
-            pTooltip="Download" tooltipPosition="top" 
-            (click)="viewFile(arquivo)"></button>
-  
-          <button pButton class="espaco-icones" icon="pi pi-trash"
-            pTooltip="Excluir" tooltipPosition="top"
-            (click)="confirmarExclusao(arquivo)"
-            [disabled]="!auth.temPermissao('ROLE_REMOVER_ARQUIVO')"></button>
-         </td>
-      </tr>
-    </ng-template>
-  
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="6">
-          Nenhum arquivo encontrado
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+          <p-table [value]="listFiles" [paginator]="true" [rows]="4" [responsive]="true"   #tabela>
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Nome</th>
+                <th>Modificado em</th>
+                <th class="col-data-header">Tamanho</th>
+                <th class="col-valor-header">Storage Class</th>
+                <th class="col-acoes-header">Ações</th>
+              </tr>
+            </ng-template>
+          
+            <ng-template pTemplate="body" let-arquivo>
+              <tr>
+                <td>{{ clearBarra (arquivo) }}</td>
+                <td>{{ arquivo.lastModif }}</td>
+                <td>{{ arquivo.size }}</td>
+                <td>{{ arquivo.storageClass }}</td>
+          
+                <td class="col-acoes">
+                  <button pButton class="espaco-icones" icon="pi pi-cloud-download"
+                    pTooltip="Download" tooltipPosition="top" 
+                    (click)="viewFile(arquivo)"></button>
+          
+                  <button pButton class="espaco-icones" icon="pi pi-trash"
+                    pTooltip="Excluir" tooltipPosition="top"
+                    (click)="confirmarExclusao(arquivo)"
+                    [disabled]="!auth.temPermissao('ROLE_REMOVER_ARQUIVO')"></button>
+                </td>
+              </tr>
+            </ng-template>
+          
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6">
+                  Nenhum arquivo encontrado
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
 
-</div>
-</div>
+      </div>
+
+      <div class="ui-g-6 ui-g-offset-6 ui-md-2 ui-md-offset-10 ui-fluid">
+        <button pButton type="submit" class="espaco-icones" label="Solicitar Interações" (click)='auditar()'></button>
+      </div>
+
+  </div>
 
 </div>

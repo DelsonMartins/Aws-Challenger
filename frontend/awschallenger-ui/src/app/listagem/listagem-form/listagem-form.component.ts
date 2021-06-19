@@ -59,6 +59,13 @@ export class ListagemFormComponent implements OnInit {
     });
   }
 
+  auditar() {
+
+    console.log('Solicitando registros de atividades');
+    this.listagemService.auditar().subscribe();
+
+  }
+
   excluir(arquivo: any) {
 
     arquivo.name = this.clearName(arquivo.name);

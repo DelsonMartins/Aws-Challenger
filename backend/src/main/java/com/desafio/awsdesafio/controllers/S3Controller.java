@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.desafio.awsdesafio.dto.InfoArqDTO;
+import com.desafio.awsdesafio.services.AthenaService;
 import com.desafio.awsdesafio.services.S3Service;
+import com.itextpdf.text.DocumentException;
 
 @RestController
 @RequestMapping(value = "/aws/file")
@@ -35,6 +37,9 @@ public class S3Controller {
 	
 	@Autowired
 	private S3Service service;
+	
+	@Autowired
+	private AthenaService serviceAthena;
 	
 	@PostMapping("/anexo")
 	//@PreAuthorize("hasAuthority('ROLE_UPLOAD_ARQUIVO') and #oauth2.hasScope('write')")
@@ -70,12 +75,23 @@ public class S3Controller {
 		
 	}
 	
-	//@PreAuthorize (String test = principal.username)
+	@GetMapping(value = "/audit")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void auditar () throws InterruptedException, IOException, DocumentException {
+		
+		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		 String name = auth.getName();
+		    
+		 logger.info("TESTANDO AUDITAGEM USUARIO LOGADO [" + name + "]");
+		
+		 String test = serviceAthena.infoEvents(name);
+	}
+	
+	
 	@GetMapping(value = "/all")
-	public ResponseEntity<List<InfoArqDTO>> listAllFiles(String historical){
-		
-		
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	public ResponseEntity<List<InfoArqDTO>> listAllFiles(String historical) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    String name = auth.getName();
 		
 	    logger.info("TESTANDO PESQUISA USUARIO LOGADO [" + name + "] Pesquisar historico [" + historical + "]");

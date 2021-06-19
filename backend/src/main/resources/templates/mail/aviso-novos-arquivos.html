@@ -6,29 +6,33 @@
 
 <p>Caros usuários,</p>
 
-<p>Novos arquivos na nuvem:</p>
+<p>Novo arquivo disponibilizado na nuvem: </p>
+  	<div class="starter-template">
+        <h2>
+            <span th:text="'Bucket: ' + ${bucket}"></span>
+        </h2>
+    </div>
 
 <p>
     <table style="width: 100%; border-collapse: collapse;  margin: 20px 0">
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>email</th>
+                <th>Folder</th>
+                <th>Arquivo</th>
             </tr>
         </thead>
         
         <tbody>
-            <tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"
-                th:each="Usuario: ${usuarios}">
-                <td th:text="${Usuario.nome}">Usuário Teste</td>
-                <td th:text="${Usuario.email}">teste@test.com</td>
+            <tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;">
+                <td th:text="${folder}">Nome folder</td>
+                <td th:text="${arquivo}">Nome arquivo</td>
             </tr>
         </tbody>
     </table>
 </p>
 
-<p>Obrigado.</p>
-<p>Desafio AWS!</p>
+<p>Obrigado,</p>
+<p>Desafio AWS Sistemas</p>
 
 </body>
 </html>

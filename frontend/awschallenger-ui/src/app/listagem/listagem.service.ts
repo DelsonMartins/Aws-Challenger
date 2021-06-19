@@ -81,6 +81,13 @@ export class ListagemService {
       catchError(this.handleError))
   }
 
+  auditar(): Observable<void> {
+    return this.http.get<void>(`${this.listagemUrl}/audit`)
+    .pipe(
+      retry(2),
+      catchError(this.handleError))
+  }
+
   excluir2(arquivo: InfoArquivo): Promise<void> {
     return this.http.delete(`${this.listagemUrl}/${arquivo}`)
       .toPromise()
