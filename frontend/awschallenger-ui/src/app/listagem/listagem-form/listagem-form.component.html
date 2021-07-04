@@ -44,9 +44,13 @@
                 <td>{{ arquivo.storageClass }}</td>
           
                 <td class="col-acoes">
-                  <button pButton class="espaco-icones" icon="pi pi-cloud-download"
-                    pTooltip="Download" tooltipPosition="top" 
-                    (click)="viewFile(arquivo)"></button>
+                  <button pButton class="espaco-icones" icon="pi pi-download"
+                  pTooltip="Download" tooltipPosition="top" 
+                  (click)="downloadFile(arquivo)"></button>
+
+                  <!--<button pButton class="espaco-icones" icon="pi pi-cloud-download"
+                    pTooltip="Visualizar" tooltipPosition="top" 
+                    (click)="viewFile(arquivo)"></button> -->
           
                   <button pButton class="espaco-icones" icon="pi pi-trash"
                     pTooltip="Excluir" tooltipPosition="top"

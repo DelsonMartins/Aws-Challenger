@@ -5,3 +5,9 @@ export class InfoArquivo {
   storageClass: string;
   size: number;
 }
+
+export class FileData {
+  filename?: string;
+  contentType?: string;
+  size?: number;
+}

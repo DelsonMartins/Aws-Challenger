@@ -3,10 +3,11 @@ import { ConfirmationService } from 'primeng/components/common/api';
 import { ListagemService } from './../listagem.service';
 import { Title } from '@angular/platform-browser';
 import { Table } from 'primeng/components/table/table';
-import { InfoArquivo } from './../../core/model'; 
+import { InfoArquivo, FileData  } from './../../core/model'; 
 import { ErrorHandlerService } from './../../core/error-handler.service';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { AuthService } from './../../seguranca/auth.service';
+import { saveAs } from 'file-saver';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class ListagemFormComponent implements OnInit {
   totalRegistros = 0;
   selectedFiles: FileList;
   currentFileUpload: File;
-  historical: boolean = false;;
+  historical: boolean = false;
   progress: { percentage: number } = { percentage: 0 };
  
 
@@ -28,6 +29,8 @@ export class ListagemFormComponent implements OnInit {
   showFile = false;
 
   listFiles = [];
+
+  fileList?: FileData[];
 
 
   constructor(
@@ -105,7 +108,14 @@ export class ListagemFormComponent implements OnInit {
     window.open(arquivo.url);
   }
 
+  downloadFile(arquivo: any): void {
 
+    arquivo.name = this.clearName(arquivo.name);
+
+    console.log('Baixando Arquivo ' + arquivo.name);
+
+     this.listagemService.download(arquivo).subscribe(blob => saveAs(blob, arquivo.name));
+  }
 
   upload() {
     this.progress.percentage = 0;

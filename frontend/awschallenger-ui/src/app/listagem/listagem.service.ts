@@ -4,8 +4,6 @@ import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
 import { HttpClient, HttpErrorResponse, HttpHeaders,  HttpParams } from '@angular/common/http';
-import * as moment from 'moment';
-
 
 import { environment } from './../../environments/environment';
 import { InfoArquivo } from './../core/model'; 
@@ -44,6 +42,18 @@ export class ListagemService {
       catchError(this.handleError))
   }
 
+  download(arquivo: InfoArquivo): Observable<Blob> {
+    return this.http.get(`${this.listagemUrl}/download/${arquivo.name}`, {
+      responseType: 'blob'
+    });
+  }
+
+  excluir(arquivo: InfoArquivo):Observable<InfoArquivo> {
+    return this.http.delete<InfoArquivo>(`${this.listagemUrl}/${arquivo.name}`)
+    .pipe(
+      retry(2),
+      catchError(this.handleError))
+  }
 
   pesquisar(filtro: ListagemFiltro): Observable<InfoArquivo[]> {
 
@@ -72,14 +82,8 @@ export class ListagemService {
     }
     console.log(errorMessage);
     return throwError(errorMessage);
-  };
-
-  excluir(arquivo: InfoArquivo):Observable<InfoArquivo> {
-    return this.http.delete<InfoArquivo>(`${this.listagemUrl}/${arquivo.name}`)
-    .pipe(
-      retry(2),
-      catchError(this.handleError))
   }
+
 
   auditar(): Observable<void> {
     return this.http.get<void>(`${this.listagemUrl}/audit`)
@@ -93,20 +97,5 @@ export class ListagemService {
       .toPromise()
       .then(() => null);
   }
-
-  /*
-  private converterStringsParaDatas(infoArquivos: InfoArquivo[]) {
-    for (const infoArquivo of infoArquivos) {
-      infoArquivos.data1 = moment(infoArquivos.dataVencimento,
-        'YYYY-MM-DD').toDate();
-
-      if (infoArquivos.dataPagamento) {
-        infoArquivos.dataPagamento = moment(infoArquivos.dataPagamento,
-          'YYYY-MM-DD').toDate();
-      }
-    }
-  }
-
-  */
-
+  
 }

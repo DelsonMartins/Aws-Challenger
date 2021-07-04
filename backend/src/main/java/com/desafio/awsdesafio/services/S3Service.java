@@ -214,9 +214,18 @@ public class S3Service {
 		}
 
 
-	public ByteArrayOutputStream downloadFile(String keyName) {
+	public ByteArrayOutputStream downloadFile(String keyName, String usuario) {
+		
+		String diretorio = "USER_" + usuario.substring(0, usuario.indexOf("@")).toUpperCase() + "/";
+		
+		logger.info("Diretorio: [" + diretorio + "]");
+		
+		String arquivo  = diretorio + keyName;
+		
+		logger.info("Arquivo: [" + arquivo + "]");
+		
 		try {
-            S3Object s3object = amazonS3.getObject(new GetObjectRequest(property.getS3().getBucket(), keyName));
+            S3Object s3object = amazonS3.getObject(new GetObjectRequest(property.getS3().getBucket(), arquivo));
             
             InputStream is = s3object.getObjectContent();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -1,9 +1,14 @@
 package com.desafio.awsdesafio.config.property;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
 
 @ConfigurationProperties("awsdesafio")
 public class AwsDesafioApiProperty {
+	
+	private Logger logger = LoggerFactory.getLogger(AwsDesafioApiProperty.class);
 
 	private String originPermitida = "http://localhost:4200";
 
@@ -26,6 +31,7 @@ public class AwsDesafioApiProperty {
 	}
 
 	public String getOriginPermitida() {
+		logger.info("ORIGEM PERMITIDA [" + originPermitida + "]");
 		return originPermitida;
 	}
 

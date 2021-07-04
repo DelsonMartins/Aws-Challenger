@@ -102,9 +102,17 @@ public class S3Controller {
 	
 	
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ARQUIVO') and #oauth2.hasScope('read')")
-	@GetMapping(value = "/{keyname}")
+	@GetMapping(value = "/download/{keyname}")
 	public ResponseEntity<byte[]> downloadFile(@PathVariable String keyname) {
-		ByteArrayOutputStream downloadInputStream = service.downloadFile(keyname);
+		
+		
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    String usuario = auth.getName();
+		
+	    logger.info("TESTANDO DOWNLOAD USUARIO LOGADO [" + usuario + "]");
+	    
+	    
+		ByteArrayOutputStream downloadInputStream = service.downloadFile(keyname, usuario);
 	
 		return ResponseEntity.ok()
 					.contentType(contentType(keyname))
@@ -112,6 +120,19 @@ public class S3Controller {
 					.body(downloadInputStream.toByteArray());	
 		
 	}
+	
+	
+	/*
+	 * @GetMapping("download/{filename:.+}")
+	 * 
+	 * @ResponseBody public ResponseEntity<Resource> downloadFile2(@PathVariable
+	 * String filename) throws IOException { Resource file =
+	 * fileService.download2(filename); Path path = file.getFile() .toPath();
+	 * 
+	 * return ResponseEntity.ok() .header(HttpHeaders.CONTENT_TYPE,
+	 * Files.probeContentType(path)) .header(HttpHeaders.CONTENT_DISPOSITION,
+	 * "attachment; filename=\"" + file.getFilename() + "\"") .body(file); }
+	 */
 	
 	 @PostMapping(value = "/upload")
 	    public String uploadMultipartFile(@RequestParam("file") MultipartFile file) {
@@ -127,6 +148,7 @@ public class S3Controller {
 			case "txt": return MediaType.TEXT_PLAIN;
 			case "png": return MediaType.IMAGE_PNG;
 			case "jpg": return MediaType.IMAGE_JPEG;
+			case "pdf": return MediaType.APPLICATION_PDF;
 			default: return MediaType.APPLICATION_OCTET_STREAM;
 		}
 	}

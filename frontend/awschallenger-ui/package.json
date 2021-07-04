@@ -30,6 +30,7 @@
     "caniuse-lite": "^1.0.30001019",
     "core-js": "^2.5.0",
     "express": "^4.17.1",
+    "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
     "moment": "^2.24.0",
     "ng2-currency-mask": "^5.3.1",
