@@ -40,6 +40,8 @@ $ mvnw clean package
 
 # Frontend ![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat-square&logo=angular&logoColor=white)
 
+![](./AWS_FrontEnd.png)
+
 Project created with [Angular CLI](https://github.com/angular/angular-cli)
 
 ### Requirements
