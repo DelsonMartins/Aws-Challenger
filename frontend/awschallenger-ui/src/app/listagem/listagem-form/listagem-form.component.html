@@ -2,15 +2,15 @@
   <div class="ui-g">
 
     <div class="ui-g-12">
-      <h1>Desafio AMcom - AWS</h1>
+      <h1>Aws-Challenger</h1>
     </div>
 
      <div class="ui-g-12">
-      <button pButton type="submit" class="espaco-icones" label="Pesquisar" (click)='pesquisar()'></button>
+      <button pButton type="submit" class="espaco-icones" label="Search" (click)='pesquisar()'></button>
     </div>
 
     <div class="ui-g-12">      
-        <p-checkbox [(ngModel)]="historical" binary="true" label="Base histórica"></p-checkbox>
+        <p-checkbox [(ngModel)]="historical" binary="true" label="Historical database"></p-checkbox>
     </div>
 
  
@@ -28,11 +28,11 @@
           <p-table [value]="listFiles" [paginator]="true" [rows]="4" [responsive]="true"   #tabela>
             <ng-template pTemplate="header">
               <tr>
-                <th>Nome</th>
-                <th>Modificado em</th>
-                <th class="col-data-header">Tamanho</th>
+                <th>Name</th>
+                <th>Modified in</th>
+                <th class="col-data-header">Size</th>
                 <th class="col-valor-header">Storage Class</th>
-                <th class="col-acoes-header">Ações</th>
+                <th class="col-acoes-header">Actions</th>
               </tr>
             </ng-template>
           
@@ -63,7 +63,7 @@
             <ng-template pTemplate="emptymessage">
               <tr>
                 <td colspan="6">
-                  Nenhum arquivo encontrado
+                  No files found
                 </td>
               </tr>
             </ng-template>
@@ -72,7 +72,7 @@
       </div>
 
       <div class="ui-g-6 ui-g-offset-6 ui-md-2 ui-md-offset-10 ui-fluid">
-        <button pButton type="submit" class="espaco-icones" label="Solicitar Interações" (click)='auditar()'></button>
+        <button pButton type="submit" class="espaco-icones" label="Request Interactions" (click)='auditar()'></button>
       </div>
 
   </div>
